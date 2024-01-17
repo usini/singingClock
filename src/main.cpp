@@ -1,54 +1,80 @@
 // Animates white pixels to simulate flying through a star field
 #include <Arduino.h>
-#include <SPI.h>
-#include <TFT_eSPI.h>
-#include <TJpg_Decoder.h>
-#include <FS.h>
-#include "LittleFS.h"
-TFT_eSPI tft = TFT_eSPI();
-TFT_eSprite background = TFT_eSprite(&tft);
-TFT_eSprite txtSprite = TFT_eSprite(&tft);
-int x = 0;
-
-bool tft_output(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *bitmap)
-{
-  tft.pushImage(x, y, w, h, bitmap);
-  return 1;
-}
+#include "peripherals.h"
+#include "internet.h"
+#include "clock.h"
 
 void setup()
 {
   Serial.begin(115200);
-  LittleFS.begin();
-  tft.init();
+  peripherals_init();
+  wifi_start();
+  clock_init();
+  // clock_start();
+}
 
-  tft.setRotation(1);
-  tft.setSwapBytes(true);
-  TJpgDec.setJpgScale(1);
-  TJpgDec.setCallback(tft_output);
-  /*
-  background.setColorDepth(8);
-  if (background.createSprite(320, 240) == nullptr)
-    Serial.println("Sprite not created");
-  else
-    Serial.println("Sprite OK");
-  background.setSwapBytes(true);
-  */
-  //TJpgDec.drawFsJpg(0, 0, "/bg.jpg", LittleFS);
-  txtSprite.createSprite(240, 96);
-  txtSprite.setTextColor(TFT_WHITE, TFT_BLACK);
-  txtSprite.setSwapBytes(true);
-  txtSprite.loadFont("/Calibri-96", LittleFS);
+unsigned long previousMillisMinute = 0; // Pour l'action toutes les minutes
+unsigned long previousMillisSecond = 0; // Pour l'action toutes les secondes
+const long intervalMinute = 60000;      // 60 000 millisecondes = 1 minute
+const long intervalSecond = 1000;       // 1 000 millisecondes = 1 seconde
+bool wifi_blink = false;
+bool redraw_background_needed = false;
+
+void redraw_background()
+{
+  if (redraw_background_needed)
+  {
+    TJpgDec.drawFsJpg(0, 0, "/bg.jpg", LittleFS);
+    redraw_background_needed = false;
+  }
+}
+
+bool redraw_wifi_icon_needed = false;
+
+void blinking_wifi()
+{
 }
 
 void loop()
 {
-  TJpgDec.drawFsJpg(0, 0, "/bg.jpg", LittleFS);
-  txtSprite.setCursor(0,0);
-  txtSprite.print(String("12:12"));
-  txtSprite.pushSprite(55,52, TFT_BLACK);
-  //background.pushSprite(0, 0);
-  Serial.println("draw" + String(x));
-  x++;
-  delay(1000);
+
+  unsigned long currentMillis = millis();
+  redraw_background_needed = true;
+
+  if (currentMillis - previousMillisMinute >= intervalMinute || redraw_clock_needed)
+  {
+    redraw_background();
+    previousMillisMinute = currentMillis;
+    txtSprite.setCursor(0, 0);
+    txtSprite.fillScreen(TFT_BLACK);
+    String time = myTz.dateTime("H:i");
+    txtSprite.print(time);
+    txtSprite.pushSprite(55, 52, TFT_BLACK);
+    if (redraw_clock_needed)
+    {
+      redraw_clock_needed = false;
+    }
+    if(connected){
+      tft.pushImage(0, 0, 16, 16, wifi_icon, TFT_BLACK);
+    }
+  }
+  if (!connected)
+  {
+    if (currentMillis - previousMillisSecond >= intervalSecond)
+    {
+      previousMillisSecond = currentMillis;
+      if (!wifi_blink)
+      {
+        Serial.println("ON");
+        tft.pushImage(0, 0, 16, 16, wifi_icon, TFT_BLACK);
+      }
+      else
+      {
+        Serial.println("OFF");
+        tft.fillRect(0,0,16,16,0x39E7);
+      }
+      //tft.pushSprite(0, 0, TFT_BLACK);
+      wifi_blink = !wifi_blink;
+    }
+  }
 }
