@@ -33,6 +33,10 @@
                 <td><span id="wifi_status">?</span></td>
             </tr>
         </table>
+        <h2>Time</h2>
+        <center>
+            <h3 id="hour_text">??:??</h3>
+        </center>
         <h2>WiFi Settings</h2>
         <table>
             <tr>
@@ -58,11 +62,11 @@
     serial.setRead(serial_read);
     connection_status = false;
 
-    function connection(){
-        
-        if(connection_status == false){
+    function connection() {
+
+        if (connection_status == false) {
             serial.begin();
-           
+
         } else {
             serial.close();
             document.getElementById("btn_connect").innerHTML = "Connect"

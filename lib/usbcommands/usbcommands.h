@@ -6,6 +6,7 @@ void cmd_status(SerialCommands *sender);
 void cmd_ssid(SerialCommands *sender);
 void cmd_pass(SerialCommands *sender);
 void cmd_wifi(SerialCommands *sender);
+void cmd_get_time(SerialCommands *sender);
 void serial_init();
 void serial_loop();
 
@@ -17,6 +18,7 @@ SerialCommand serialStatus("status", cmd_status);
 SerialCommand serialSSID("ssid", cmd_ssid);
 SerialCommand serialPass("pass", cmd_pass);
 SerialCommand serialwifi("wifi", cmd_wifi);
+SerialCommand serialgetTime("getTime", cmd_get_time);
 
 void cmd_unrecognized(SerialCommands *sender, const char *cmd)
 {
@@ -50,6 +52,11 @@ void cmd_ssid(SerialCommands *sender)
     Serial.println("[📶 WIFI] 🏷️ SSID Changed to - " + wifi_ssid);
 }
 
+void cmd_get_time(SerialCommands *sender)
+{
+    Serial.println(myTz.dateTime("H:i"));
+}
+
 void cmd_pass(SerialCommands *sender)
 {
     char *value = sender->Next();
@@ -78,6 +85,7 @@ void serial_init()
     serial_commands.AddCommand(&serialSSID);
     serial_commands.AddCommand(&serialPass);
     serial_commands.AddCommand(&serialwifi);
+    serial_commands.AddCommand(&serialgetTime);
 }
 
 void serial_loop()
