@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+
+<body>
+    <div class="container">
+        <h1>REMOS</h1>
+        <div class="grid">
+            <div>
+                <button id="btn_connect" onclick="connection();">Connect</button>
+            </div>
+            <div>
+                <button id="btn_reboot" disabled onclick='serial.write("reboot")'>Reboot</button>
+            </div>
+            <div>
+                <button id="btn_status" disabled onclick='serial.write("status")'>Status</button>
+            </div>
+        </div>
+        <h2>Status</h2>
+        <table>
+            <tr>
+                <td>Flash</td>
+                <td>SD</td>
+                <td>Video</td>
+                <td>Serial</td>
+                <td>WiFi</td>
+            </tr>
+            <tr>
+                <td><span id="flash_status">?</span></td>
+                <td><span id="sd_status">?</span></td>
+                <td><span id="video_status">?</span></td>
+                <td><span id="serial_status">?</span></td>
+                <td><span id="wifi_status">?</span></td>
+            </tr>
+        </table>
+        <h2>WiFi Settings</h2>
+        <table>
+            <tr>
+                <td>SSID</td>
+                <td>Password</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td> <input id="ssid_input" type="text"></td>
+                <td> <input id="pass_input" type="password"></td>
+                <td><button onclick="change_wifi()">Change</button></td>
+            </tr>
+        </table>
+        <p id="error"></p>
+    </div>
+</body>
+<script type="text/javascript" src="esprerial.js"></script>
+<script>
+    // Create Esprerial with baudrate 115200 / endline= "\r\n"
+    serial = new Esprerial();
+    serial.setStart(serial_start);
+    serial.setError(serial_error);
+    serial.setRead(serial_read);
+    connection_status = false;
+
+    function connection(){
+        
+        if(connection_status == false){
+            serial.begin();
+            document.getElementById("btn_connect").innerHTML = "Disconnect"
+        } else {
+            serial.close();
+            document.getElementById("btn_connect").innerHTML = "Connect"
+            connection_status = false;
+        }
+    }
+
+    async function serial_start() {
+        console.log("Starting");
+        connection_status = true;
+        document.getElementById("serial_status").innerHTML = "🟢";
+        await serial.write("status");
+        document.getElementById("btn_reboot").disabled = false;
+        document.getElementById("btn_status").disabled = false;
+    }
+
+    async function change_wifi() {
+        await serial.write("ssid§" + document.getElementById("ssid_input").value);
+        await serial.write("pass§" + document.getElementById("pass_input").value);
+        await serial.write("wifi§restart");
+    }
+
+    function serial_read(message) {
+        message = message.trim();
+        console.log(message);
+        if (message == "[📶 WIFI] ...") {
+            document.getElementById("wifi_status").innerHTML = "🔴";
+        }
+        if (message == "[💾 FS] 🟢 OK") {
+            document.getElementById("flash_status").innerHTML = "🟢";
+        }
+        if (message == "[💾 FS] 🔴 Failed") {
+            document.getElementById("flash_status").innerHTML = "🔴";
+        }
+        if (message == "[💾 SD] 🟢 OK") {
+            document.getElementById("sd_status").innerHTML = "🟢";
+        }
+        if (message == "[💾 SD] 🔴 Failed") {
+            document.getElementById("sd_status").innerHTML = "🔴";
+        }
+        if (message == "[🖥️  Display] 🟢 OK") {
+            document.getElementById("video_status").innerHTML = "🟢";
+        }
+        if (message == "[🖥️  Display] 🔴 Failed") {
+            document.getElementById("video_status").innerHTML = "🔴";
+        }
+        if (message.includes("[📶 WIFI] 🏷️ SSID -")) {
+            document.getElementById("ssid_input").value = message.split("-")[1].trim();
+        }
+    }
+
+    function serial_error(error) {
+        console.log(error);
+        document.getElementById("error").innerHTML += error;
+        document.getElementById("serial_status").innerHTML = "🔴";
+        document.getElementById("btn_reboot").disabled = true;
+        document.getElementById("btn_status").disabled = true;
+    }
+</script>
+
+</html>

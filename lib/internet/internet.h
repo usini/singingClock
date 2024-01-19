@@ -3,36 +3,56 @@ String wifi_password = "";
 Timezone myTz;
 bool connected = false;
 bool redraw_clock_needed = true;
+bool wifi_change = false;
 #include "wifi_icon.h"
 
 TFT_eSprite wiFiSprite = TFT_eSprite(&tft);
 
 void WiFiTask(void *parameter)
 {
-    WiFi.begin(wifi_ssid, wifi_password);
-    Serial.println("[📶 WIFI] 👋 Init");
-    Serial.println("[📶 WIFI] 🏷️ SSID - " + wifi_ssid);
-    while (WiFi.status() != WL_CONNECTED)
+    while (true)
     {
-        vTaskDelay(pdMS_TO_TICKS(1000));
-        Serial.println("[📶 WIFI] ...");
-    }
-    Serial.println("[📶 WIFI] 🟢 OK");
-    //while (!screen_available)
-    //{
-    //    vTaskDelay(pdMS_TO_TICKS(10));
-    //}
-    //drawJPGpos(256, 0, "/wifi.jpg");
-    Serial.println("[📶⏲️ NTP CLOCK] 👋 Init");
-    myTz.setLocation("Europe/Paris");
-    waitForSync();
-    connected = true;
-    redraw_clock_needed = true;
-    Serial.println("[📶⏲️ NTP CLOCK] 🟢 OK");
-    while (1)
-    {
-        events();
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        if (wifi_change)
+        {
+            // Réinitialiser wifi_change et reconnecter
+            connected = false;
+            wifi_change = false;
+            Serial.println("[📶 WIFI] 👋🏷️ SSID changed");
+            WiFi.disconnect();
+        }
+        WiFi.begin(wifi_ssid, wifi_password);
+        Serial.println("[📶 WIFI] 👋 Init");
+        Serial.println("[📶 WIFI] 🏷️ SSID - " + wifi_ssid);
+        while (WiFi.status() != WL_CONNECTED)
+        {
+            vTaskDelay(pdMS_TO_TICKS(100));
+            if (wifi_change)
+                break;
+        }
+        if(WiFi.status() == WL_CONNECTED){
+            connected = true;
+        }
+        if (connected)
+        {
+            Serial.println("[📶 WIFI] 🟢 OK");
+            // while (!screen_available)
+            //{
+            //     vTaskDelay(pdMS_TO_TICKS(10));
+            // }
+            // drawJPGpos(256, 0, "/wifi.jpg");
+            Serial.println("[📶⏲️ NTP CLOCK] 👋 Init");
+            myTz.setLocation("Europe/Paris");
+            waitForSync();
+            redraw_clock_needed = true;
+            Serial.println("[📶⏲️ NTP CLOCK] 🟢 OK");
+            while (1)
+            {
+                events();
+                vTaskDelay(pdMS_TO_TICKS(100));
+                if (wifi_change)
+                    break;
+            }
+        }
     }
 }
 
@@ -62,14 +82,14 @@ bool read_wifi_credentials()
         file.close();
         return false;
     }
-    //File LittleFS_file = LittleFS.open("/wifi.txt", FILE_WRITE);
+    // File LittleFS_file = LittleFS.open("/wifi.txt", FILE_WRITE);
     wifi_ssid = file.readStringUntil('\n');
     wifi_ssid.trim();
     // LittleFS_file.println(wifi_ssid);
 
     wifi_password = file.readStringUntil('\n');
     wifi_password.trim();
-    //LittleFS_file.println(wifi_password);
+    // LittleFS_file.println(wifi_password);
     Serial.println("[💾 SD] 🟢 /sd/wifi.txt OK");
     file.close();
     // LittleFS_file.close();
