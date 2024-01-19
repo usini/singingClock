@@ -7,6 +7,8 @@ void cmd_ssid(SerialCommands *sender);
 void cmd_pass(SerialCommands *sender);
 void cmd_wifi(SerialCommands *sender);
 void cmd_get_time(SerialCommands *sender);
+void cmd_set_time(SerialCommands *sender);
+
 void serial_init();
 void serial_loop();
 
@@ -19,6 +21,8 @@ SerialCommand serialSSID("ssid", cmd_ssid);
 SerialCommand serialPass("pass", cmd_pass);
 SerialCommand serialwifi("wifi", cmd_wifi);
 SerialCommand serialgetTime("getTime", cmd_get_time);
+SerialCommand serialsetTime("setTime", cmd_set_time);
+
 
 void cmd_unrecognized(SerialCommands *sender, const char *cmd)
 {
@@ -54,7 +58,20 @@ void cmd_ssid(SerialCommands *sender)
 
 void cmd_get_time(SerialCommands *sender)
 {
-    Serial.println(myTz.dateTime("H:i"));
+    Serial.println("[⏲️TIME] - " + myTz.dateTime("H:i"));
+}
+
+
+void cmd_set_time(SerialCommands *sender)
+{
+    char *value = "";
+    int time[6];
+    for(int i=0;i<6;i++){
+        value = sender->Next();
+        time[i] = String(value).toInt();
+    }
+    myTz.setTime(time[0],time[1],time[2],time[3],time[4], time[5]);
+    Serial.println("[⏲️TIME] - " + myTz.dateTime("H:i"));
 }
 
 void cmd_pass(SerialCommands *sender)
@@ -86,6 +103,7 @@ void serial_init()
     serial_commands.AddCommand(&serialPass);
     serial_commands.AddCommand(&serialwifi);
     serial_commands.AddCommand(&serialgetTime);
+    serial_commands.AddCommand(&serialsetTime);
 }
 
 void serial_loop()

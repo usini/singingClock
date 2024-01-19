@@ -35,7 +35,7 @@
         </table>
         <h2>Time</h2>
         <center>
-            <h3 id="hour_text">??:??</h3>
+            <h1><span id="time_text">??:??</span><button onclick="syncTime()">Sync</button></button></h1>
         </center>
         <h2>WiFi Settings</h2>
         <table>
@@ -81,6 +81,7 @@
         connection_status = true;
         document.getElementById("serial_status").innerHTML = "🟢";
         await serial.write("status");
+        await serial.write("getTime");
         document.getElementById("btn_connect").innerHTML = "Disconnect"
         document.getElementById("btn_reboot").disabled = false;
         document.getElementById("btn_status").disabled = false;
@@ -122,6 +123,9 @@
         if (message.includes("[📶 WIFI] 🏷️ SSID -")) {
             document.getElementById("ssid_input").value = message.split("-")[1].trim();
         }
+        if (message.includes("[⏲️TIME] - ")) {
+            document.getElementById("time_text").innerHTML = message.split("-")[1].trim();
+        }
     }
 
     function serial_error(error) {
@@ -130,6 +134,21 @@
         document.getElementById("serial_status").innerHTML = "🔴";
         document.getElementById("btn_reboot").disabled = true;
         document.getElementById("btn_status").disabled = true;
+    }
+
+    function syncTime(){
+        serial.write("setTime§"+ makeTime());
+    }
+
+    function makeTime() {
+        let now = new Date();
+        let hour = now.getHours();
+        let minute = now.getMinutes();
+        let second = now.getSeconds();
+        let day = now.getDate();
+        let month = now.getMonth() + 1;
+        let year = now.getFullYear();
+        return hour + "§" + minute + "§" + second + "§" + day + "§" + month + "§" + year;
     }
 </script>
 

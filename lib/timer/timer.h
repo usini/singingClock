@@ -4,11 +4,14 @@ const long intervalMinute = 60000;      // 60 000 millisecondes = 1 minute
 const long intervalSecond = 1000;       // 1 000 millisecondes = 1 seconde
 unsigned long currentMillis = 0;
 
+unsigned int lastMinute = -1;
+unsigned int lastSecond = -1;
+
 bool minute_tick()
 {
-    if (currentMillis - previousMillisMinute >= intervalMinute)
+    if (lastMinute != myTz.minute())
     {
-        previousMillisMinute = currentMillis;
+        lastMinute = myTz.minute();
         return true;
     }
     else
@@ -20,9 +23,9 @@ bool minute_tick()
 
 bool second_tick()
 {
-    if (currentMillis - previousMillisSecond >= intervalSecond)
+    if(lastSecond != myTz.second())
     {
-        previousMillisSecond = currentMillis;
+        lastSecond = myTz.second();
         return true;
     }
     else

@@ -1,8 +1,8 @@
 // Animates white pixels to simulate flying through a star field
 #include <Arduino.h>
-#include "timer.h"
 #include "peripherals.h"
 #include "internet.h"
+#include "timer.h"
 #include "clock.h"
 #include "ui.h"
 #include "usbcommands.h"
@@ -26,6 +26,7 @@ void loop()
   {
     redraw_background();
     redraw_clock();
+    Serial.println("[⏲️TIME] - " + myTz.dateTime("H:i"));
     if (connected)
     {
       redraw_wifi_icon();
