@@ -7,18 +7,25 @@
 #include <TJpg_Decoder.h>
 #include <Preferences.h>
 #include <ezTime.h>
+#include <XPT2046_Bitbang.h>
 
 TFT_eSPI tft = TFT_eSPI();
 SPIClass spi_sd = SPIClass(VSPI);
+XPT2046_Bitbang ts = XPT2046_Bitbang(XPT2046_MOSI, XPT2046_MISO, XPT2046_CLK, XPT2046_CS);
 
 bool fs_status = false;
 bool sd_status = false;
 bool audio_status = false;
 bool video_status = false;
+bool draw_with_transparency = false;
 
 bool tft_output(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *bitmap)
 {
-    tft.pushImage(x, y, w, h, bitmap);
+    if(draw_with_transparency){
+        tft.pushImage(x, y, w, h, bitmap, TFT_BLACK);
+    } else {
+        tft.pushImage(x, y, w, h, bitmap);
+    }
     return 1;
 }
 
@@ -31,6 +38,10 @@ bool screen_init()
     tft.setSwapBytes(true);
     TJpgDec.setJpgScale(1);
     TJpgDec.setCallback(tft_output);
+    //spi_touchscreen.begin(XPT2046_CLK, XPT2046_MISO, XPT2046_MOSI, XPT2046_CS);
+    //ts.begin(spi_touchscreen);
+    ts.begin();
+    //ts.setRotation(1);
     return true;
 }
 

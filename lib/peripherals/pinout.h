@@ -16,3 +16,9 @@
 #define I2S_LRCK 17
 #define I2S_DIN -1
 #define I2S_DOUT 16
+
+#define XPT2046_IRQ 36
+#define XPT2046_MOSI 32
+#define XPT2046_MISO 39
+#define XPT2046_CLK 25
+#define XPT2046_CS 33

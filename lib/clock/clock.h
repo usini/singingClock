@@ -1,5 +1,3 @@
-TFT_eSprite background = TFT_eSprite(&tft);
-TFT_eSprite txtSprite = TFT_eSprite(&tft);
 
 void clock_init()
 {
