@@ -1,35 +1,40 @@
 
+// Pinout
 #include "pinout.h"
-#include <WiFi.h>
+
+// FileSystem / SD
 #include <FS.h>
 #include "LittleFS.h"
+
+// Screen
 #include <TFT_eSPI.h>
 #include <TJpg_Decoder.h>
-#include <Preferences.h>
-#include <ezTime.h>
+#include <PNGdec.h>
+
 #include <XPT2046_Bitbang.h>
 
+// Spi Device (we are forced to bitbang XPT2046 because we have 3 SPI Device and 2 SPI Bus)
+// Could probably make up for it with CS...
 TFT_eSPI tft = TFT_eSPI();
+//#include "decoder/png.h"
+#include "decoder/jpg.h"
 SPIClass spi_sd = SPIClass(VSPI);
 XPT2046_Bitbang ts = XPT2046_Bitbang(XPT2046_MOSI, XPT2046_MISO, XPT2046_CLK, XPT2046_CS);
 
-bool fs_status = false;
-bool sd_status = false;
-bool audio_status = false;
-bool video_status = false;
-bool draw_with_transparency = false;
+// Status for peripherals
+bool fsStatus = false;
+bool sdStatus = false;
+bool audioStatus = false;
+bool videoStatus = false;
 
-bool tft_output(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *bitmap)
+void getMemory()
 {
-    if(draw_with_transparency){
-        tft.pushImage(x, y, w, h, bitmap, TFT_BLACK);
-    } else {
-        tft.pushImage(x, y, w, h, bitmap);
-    }
-    return 1;
+    char temp[300];
+    sprintf(temp, "Heap: Free:%i, Min:%i, Size:%i, Alloc:%i", ESP.getFreeHeap(), ESP.getMinFreeHeap(), ESP.getHeapSize(), ESP.getMaxAllocHeap());
+    Serial.println(temp);
 }
 
-bool screen_init()
+bool screenInit()
 {
     Serial.println("[🖥️  Display] 👋 Init");
     tft.init();
@@ -37,15 +42,12 @@ bool screen_init()
     tft.setRotation(1);
     tft.setSwapBytes(true);
     TJpgDec.setJpgScale(1);
-    TJpgDec.setCallback(tft_output);
-    //spi_touchscreen.begin(XPT2046_CLK, XPT2046_MISO, XPT2046_MOSI, XPT2046_CS);
-    //ts.begin(spi_touchscreen);
+    TJpgDec.setCallback(jpgDraw);
     ts.begin();
-    //ts.setRotation(1);
     return true;
 }
 
-bool fs_init()
+bool fsInit()
 {
     Serial.println("[💾 FS] 👋 Init");
     bool status = LittleFS.begin(false, "/flash");
@@ -60,7 +62,7 @@ bool fs_init()
     return status;
 }
 
-bool sd_init()
+bool sdInit()
 {
     Serial.println("[💾 SD] 👋 Init");
     spi_sd.begin(SD_SCK, SD_MISO /* MISO */, SD_MOSI /* MOSI */, SD_CS /* SS */);
@@ -76,9 +78,9 @@ bool sd_init()
     return status;
 }
 
-void peripherals_statuts()
+void peripheralsStatus()
 {
-    if (fs_status)
+    if (fsStatus)
     {
         Serial.println("[💾 FS] 🟢 OK");
     }
@@ -86,7 +88,7 @@ void peripherals_statuts()
     {
         Serial.println("[💾 FS] 🔴 Failed");
     }
-    if (sd_status)
+    if (sdStatus)
     {
         Serial.println("[💾 SD] 🟢 OK");
     }
@@ -94,7 +96,7 @@ void peripherals_statuts()
     {
         Serial.println("[💾 SD] 🔴 Failed");
     }
-    if (video_status)
+    if (videoStatus)
     {
         Serial.println("[🖥️  Display] 🟢 OK");
     }
@@ -104,13 +106,13 @@ void peripherals_statuts()
     }
 }
 
-bool peripherals_init()
+bool peripheralsInit()
 {
-    fs_status = fs_init();
-    sd_status = sd_init();
-    video_status = screen_init();
-    // bool audio_status = audio_init();
-    if (video_status && sd_status && fs_init)
+    fsStatus = fsInit();
+    sdStatus = sdInit();
+    videoStatus = screenInit();
+    // bool audioStatus = audio_init();
+    if (videoStatus && sdStatus && fsInit)
     {
         return true;
     }
@@ -118,19 +120,4 @@ bool peripherals_init()
     {
         return false;
     }
-    /*
-    if (sd_status)
-    {
-        drawJPGpos(288, 0, "/sdcard.jpg");
-    }
-    else
-    {
-        drawJPGpos(288, 0, "/nosdcard.jpg");
-    }
-
-    else
-    {
-        return false;
-    }
-    */
 }

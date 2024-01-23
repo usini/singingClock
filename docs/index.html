@@ -119,10 +119,10 @@
     function serial_read(message) {
         message = message.trim();
         console.log(message);
-        if (message == "[📶 WIFI] ...") {
+        if (message == "[📶 WIFI] 🔴 FAILED") {
             document.getElementById("wifi_status").innerHTML = "🔴";
         }
-        if (message == "[📶 WIFI] 🟢") {
+        if (message == "[📶 WIFI] 🟢 OK") {
             document.getElementById("wifi_status").innerHTML = "🟢";
         }
         if (message == "[💾 FS] 🟢 OK") {
