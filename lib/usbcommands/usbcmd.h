@@ -6,7 +6,7 @@ void cmdUnrecognized(SerialCommands *sender, const char *cmd)
 void cmdStatus(SerialCommands *sender)
 {
     peripheralsStatus();
-    Serial.println("[📶 WIFI] 🏷️ SSID - " + wifi_ssid);
+    Serial.println("[📶 WIFI] 🏷️ SSID - " + wifiSSID);
     if (connected)
     {
         Serial.println("[📶 WIFI] 🟢 OK");
@@ -26,8 +26,8 @@ void cmdReboot(SerialCommands *sender)
 void cmdSSID(SerialCommands *sender)
 {
     char *value = sender->Next();
-    wifi_ssid = value;
-    Serial.println("[📶 WIFI] 🏷️ SSID Changed to - " + wifi_ssid);
+    wifiSSID = value;
+    Serial.println("[📶 WIFI] 🏷️ SSID Changed to - " + wifiSSID);
 }
 
 void cmdGetTime(SerialCommands *sender)
@@ -51,7 +51,7 @@ void cmdSetTime(SerialCommands *sender)
 void cmdPass(SerialCommands *sender)
 {
     char *value = sender->Next();
-    wifi_password = value;
+    wifiPassword = value;
     Serial.println("[📶 WIFI] 🏷️ Password Changed");
 }
 
@@ -61,7 +61,7 @@ void cmdWifi(SerialCommands *sender)
     String arg = String(value);
     if (arg == "restart")
     {
-        wifi_change = true;
+        wifiChange = true;
         Serial.println("[📶 WIFI] ♾️ Restart");
     }
     else

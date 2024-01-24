@@ -24,13 +24,13 @@ void loop()
 
   if (minuteTick() || redrawClockNeeded)
   {
-    redraw_in_progress = true;
+    redrawInProgress = true;
     redrawBackground();
     redraw_clock();
 
     for (int i = 0; i < 3; i++)
     {
-      button_redraw_needed[i] = true;
+      buttonRedrawNeeded[i] = true;
     }
 
     if (connected)
@@ -38,22 +38,22 @@ void loop()
       redraw_wifi_icon();
     }
     Serial.println("[⏲️TIME] - " + myTz.dateTime("H:i"));
-    redraw_in_progress = false;
+    redrawInProgress = false;
   }
   if (!connected)
   {
     if (secondTick())
     {
-      redraw_in_progress = true;
+      redrawInProgress = true;
       blinking_wifi();
-      redraw_in_progress = false;
+      redrawInProgress = false;
     }
   }
 
-  if (button_redraw_needed[0])
+  if (buttonRedrawNeeded[0])
   {
-    redraw_in_progress = true;
-    if (button_state[0])
+    redrawInProgress = true;
+    if (buttonState[0])
     {
       drawButton(0, LIGHT_ON);
     }
@@ -61,8 +61,8 @@ void loop()
     {
       drawButton(0, LIGHT_OFF);
     }
-    button_redraw_needed[0] = false;
-    redraw_in_progress = false;
+    buttonRedrawNeeded[0] = false;
+    redrawInProgress = false;
   }
 
   TouchPoint p = ts.getTouch();
@@ -75,26 +75,26 @@ void loop()
       if (p.x >= 30 && p.x <= 100)
       {
         Serial.println("Button 1 Pressed");
-        if (button_state[0])
+        if (buttonState[0])
         {
-          if (mqtt_connected)
+          if (mqttConnected)
           {
             mqttClient.publish("lampe/salon/command", 1, false, "off");
           }
         }
         else
         {
-          if (mqtt_connected)
+          if (mqttConnected)
           {
             mqttClient.publish("lampe/salon/command", 1, false, "on");
           }
         }
-        button_state[0] = !button_state[0];
+        buttonState[0] = !buttonState[0];
       }
       if (p.x >= 120 && p.x <= 190)
       {
         Serial.println("Button 1 Pressed");
-        if (button_state[1])
+        if (buttonState[1])
         {
 
         }
@@ -102,12 +102,12 @@ void loop()
         {
 
         }
-        button_state[1] = !button_state[1];
+        buttonState[1] = !buttonState[1];
       }
       if (p.x >= 220)
       {
         Serial.println("Button 1 Pressed");
-        if (button_state[2])
+        if (buttonState[2])
         {
 
         }
@@ -115,7 +115,7 @@ void loop()
         {
 
         }
-        button_state[2] = !button_state[2];
+        buttonState[2] = !buttonState[2];
       }
     }
 
