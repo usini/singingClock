@@ -62,12 +62,13 @@ void drawButton(int pos, int icon)
     }
 }
 
+/*
 void redraw_clock()
 {
     txtSprite.loadFont("/Calibri-96", LittleFS);
     txtSprite.setCursor(0, 0);
     txtSprite.fillScreen(TFT_BLACK);
-    String time = myTz.dateTime("H:i");
+    //String time = myTz.dateTime("H:i");
     txtSprite.print(time);
     txtSprite.pushSprite(55, 52, TFT_BLACK);
 
@@ -83,6 +84,7 @@ void redraw_clock()
         redrawClockNeeded = false;
     }
 }
+*/
 
 void blinking_wifi()
 {
