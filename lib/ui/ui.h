@@ -62,20 +62,19 @@ void drawButton(int pos, int icon)
     }
 }
 
-/*
-void redraw_clock()
+void redrawClock()
 {
     txtSprite.loadFont("/Calibri-96", LittleFS);
     txtSprite.setCursor(0, 0);
     txtSprite.fillScreen(TFT_BLACK);
     //String time = myTz.dateTime("H:i");
-    txtSprite.print(time);
+    txtSprite.print(timeToString());
     txtSprite.pushSprite(55, 52, TFT_BLACK);
 
     txt2Sprite.loadFont("/Calibri-24", LittleFS);
     txt2Sprite.setCursor(0, 0);
     txt2Sprite.fillScreen(TFT_BLACK);
-    String date = myTz.dateTime("l d/m");
+    String date = dateToString();
     txt2Sprite.print(date);
     txt2Sprite.pushSprite(100, 125, TFT_BLACK);
 
@@ -84,7 +83,6 @@ void redraw_clock()
         redrawClockNeeded = false;
     }
 }
-*/
 
 void blinking_wifi()
 {

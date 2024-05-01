@@ -1,9 +1,10 @@
 // Animates white pixels to simulate flying through a star field
 #include <Arduino.h>
+
 #include "peripherals.h"
-#include "ui.h"
-//#include "timer.h"
 #include "timer_rtc.h"
+#include "ui.h"
+#include "audio.h"
 #include "usbcommands.h"
 bool redrawInProgress = false;
 bool screen_pressed = false;
@@ -14,61 +15,69 @@ void setup()
   peripheralsInit();
   serialInit();
   uiInit();
-  redrawBackground();
-  rtc_start();
+  audioInit();
+  //redrawBackground();
+  //redrawClock();
+  rtcStart();
+  playStartup();
 }
 
 void loop()
 {
-  rtc_loop();
-  //redrawBackgroundNeeded = true;
+  // rtcLoop();
+  // redrawBackgroundNeeded = true;
+  mp3Loop();
   serialLoop();
-  delay(1000);
-  /*
-  if (minuteTick() || redrawClockNeeded)
+
+  if (minuteTick())
   {
+    String path = "/time/" + String(currentHours) + String(currentMinutes);
+    String audioFileToPlay = path + "/" + PickRandomFile(path);
+    Serial.println(audioFileToPlay);
+
+    redrawBackgroundNeeded = true;
     redrawInProgress = true;
     redrawBackground();
-    redraw_clock();
-
-    for (int i = 0; i < 3; i++)
-    {
-      buttonRedrawNeeded[i] = true;
-    }
-
-    Serial.println("[⏲️TIME] - " + myTz.dateTime("H:i"));
+    redrawClock();
+    Serial.println("[⏲️TIME] - " + timeToString());
     redrawInProgress = false;
-  }
-
-  if (buttonRedrawNeeded[0])
-  {
-    redrawInProgress = true;
-    if (buttonState[0])
-    {
-      drawButton(0, LIGHT_ON);
+    if(SD.exists(audioFileToPlay)){
+      playFile(audioFileToPlay);
+    } else {
+      Serial.println("No file for this time...");
     }
-    else
+  }
+
+  /*
+    if (buttonRedrawNeeded[0])
     {
-      drawButton(0, LIGHT_OFF);
+      redrawInProgress = true;
+      if (buttonState[0])
+      {
+        drawButton(0, LIGHT_ON);
+      }
+      else
+      {
+        drawButton(0, LIGHT_OFF);
+      }
+      buttonRedrawNeeded[0] = false;
+      redrawInProgress = false;
     }
-    buttonRedrawNeeded[0] = false;
-    redrawInProgress = false;
-  }
 
-  TouchPoint p = ts.getTouch();
+    TouchPoint p = ts.getTouch();
 
-  if (p.zRaw > 200 && !screen_pressed)
-  {
-    screen_pressed = true;
-    Serial.print("[🖥️👉 Display] Touch: ");
-    Serial.print(p.x);
-    Serial.print(",");
-    Serial.println(p.y);
-    delay(100);
-  }
-  if (p.zRaw <= 200 && screen_pressed)
-  {
-    screen_pressed = false;
-  }
-  */
+    if (p.zRaw > 200 && !screen_pressed)
+    {
+      screen_pressed = true;
+      Serial.print("[🖥️👉 Display] Touch: ");
+      Serial.print(p.x);
+      Serial.print(",");
+      Serial.println(p.y);
+      delay(100);
+    }
+    if (p.zRaw <= 200 && screen_pressed)
+    {
+      screen_pressed = false;
+    }
+    */
 }

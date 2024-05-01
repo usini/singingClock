@@ -9,7 +9,6 @@
 // Screen
 #include <TFT_eSPI.h>
 #include <TJpg_Decoder.h>
-#include <PNGdec.h>
 
 #include <XPT2046_Bitbang.h>
 
@@ -108,6 +107,7 @@ void peripheralsStatus()
 
 bool peripheralsInit()
 {
+    randomSeed(analogRead(34));
     fsStatus = fsInit();
     sdStatus = sdInit();
     videoStatus = screenInit();
@@ -120,4 +120,33 @@ bool peripheralsInit()
     {
         return false;
     }
+}
+
+String PickRandomFile(String folder){
+    File root = SD.open(folder);
+    if(!root || !root.isDirectory()){
+        Serial.println("Folder not exists");
+        return "";
+    }
+    int fileCount = 0;
+    File file = root.openNextFile();
+    while(file){
+        fileCount++;
+        file = root.openNextFile();
+    }
+    Serial.println("Count file" + String(fileCount));
+    int randomFileNumber = random(0,fileCount);
+    Serial.println("Random is" + String(randomFileNumber));
+    fileCount = 0;
+    root = SD.open(folder);
+    file = root.openNextFile();
+    while(file){
+        if(fileCount == randomFileNumber){
+            Serial.println("filename:" + String(file.name()));
+            return file.name();
+        }
+        file = root.openNextFile();
+        fileCount++;
+    }
+    return "";
 }
