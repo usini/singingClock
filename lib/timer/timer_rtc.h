@@ -17,7 +17,6 @@ int currentHours = 0;
 int currentMinutes = 0;
 int currentSeconds = 0;
 
-
 String daysOfTheWeek[7] = {"Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"};
 
 bool rtcStart()
@@ -70,29 +69,42 @@ time_t rtcToTime_T()
 
 String timeToString()
 {
+    //@todo Refactor
     time_t utc = now();
     time_t local = myTZ.toLocal(utc, &tcr);
     int hours = hour(local);
     int minutes = minute(local);
-    return String(hours) + ":" + String(minutes);
+    String Shours = String(hours);
+    String Sminutes = String(minutes);
+    if (minutes < 10)
+    {
+        Sminutes = "0" + Sminutes;
+    }
+    if (hours < 10)
+    {
+        Shours = "0" + Shours;
+    }
+    return Shours + ":" + Sminutes;
 }
 
 String dateToString()
 {
     time_t utc = now();
     time_t local = myTZ.toLocal(utc, &tcr);
-    String dayString = String(day(local)+1);
+    String dayString = String(day(local) + 1);
     String monthString = String(month(local));
-    String dayNameString = daysOfTheWeek[day(local)+1];
+    String dayNameString = daysOfTheWeek[day(local) + 1];
     return dayNameString + " " + dayString + "/" + monthString;
 }
 
-bool minuteTick(){
+bool minuteTick()
+{
     time_t utc = now();
     time_t local = myTZ.toLocal(utc, &tcr);
     int minutes = minute(local);
     int hours = hour(local);
-    if(currentMinutes != minutes) {
+    if (currentMinutes != minutes)
+    {
         currentMinutes = minutes;
         currentHours = hours;
         return true;
@@ -100,11 +112,13 @@ bool minuteTick(){
     return false;
 }
 
-bool hourTick(){
-     time_t utc = now();
+bool hourTick()
+{
+    time_t utc = now();
     time_t local = myTZ.toLocal(utc, &tcr);
     int hours = hour(local);
-    if(currentHours != hours) {
+    if (currentHours != hours)
+    {
         currentHours = hours;
         return true;
     }

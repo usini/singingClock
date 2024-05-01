@@ -16,8 +16,8 @@ void setup()
   serialInit();
   uiInit();
   audioInit();
-  //redrawBackground();
-  //redrawClock();
+  // redrawBackground();
+  // redrawClock();
   rtcStart();
   playStartup();
 }
@@ -31,7 +31,18 @@ void loop()
 
   if (minuteTick())
   {
-    String path = "/time/" + String(currentHours) + String(currentMinutes);
+    //@todo Refactor
+    String Shours = String(currentHours);
+    String Sminutes = String(currentMinutes);
+    if (currentMinutes < 10)
+    {
+        Sminutes = "0" + Sminutes;
+    }
+    if (currentHours < 10)
+    {
+        Shours = "0" + Shours;
+    }
+    String path = "/time/" + Shours + "-" + Sminutes;
     String audioFileToPlay = path + "/" + PickRandomFile(path);
     Serial.println(audioFileToPlay);
 
@@ -41,9 +52,12 @@ void loop()
     redrawClock();
     Serial.println("[⏲️TIME] - " + timeToString());
     redrawInProgress = false;
-    if(SD.exists(audioFileToPlay)){
+    if (SD.exists(audioFileToPlay))
+    {
       playFile(audioFileToPlay);
-    } else {
+    }
+    else
+    {
       Serial.println("No file for this time...");
     }
   }
