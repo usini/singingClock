@@ -68,7 +68,7 @@ void redrawClock()
     txtSprite.setCursor(0, 0);
     txtSprite.fillScreen(TFT_BLACK);
     //String time = myTz.dateTime("H:i");
-    txtSprite.print(timeToString());
+    txtSprite.print(timeToString(false));
     txtSprite.pushSprite(55, 52, TFT_BLACK);
 
     txt2Sprite.loadFont("/Calibri-24", LittleFS);

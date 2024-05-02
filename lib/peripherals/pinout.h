@@ -22,3 +22,7 @@
 #define XPT2046_MISO 39
 #define XPT2046_CLK 25
 #define XPT2046_CS 33
+
+#define I2C_SDA 27
+#define I2C_SCL 22
+

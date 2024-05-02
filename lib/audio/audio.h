@@ -1,5 +1,4 @@
 #include "AudioFileSourceSD.h"
-#include "AudioFileSourceID3.h"
 #include "AudioGeneratorMP3.h"
 #include "AudioOutputI2S.h"
 
@@ -18,7 +17,7 @@ void audioInit()
 
 void playFile(String filename)
 {
-    Serial.println("🎵 Playing " + filename);
+    Serial.println("[🎵 SD] Playing " + filename);
     audioFile = new AudioFileSourceSD(filename.c_str());
     mp3->begin(audioFile, out);
 }
@@ -32,9 +31,6 @@ void mp3Loop()
 {
     if (mp3->isRunning())
     {
-        if (!mp3->loop())
-        {
-            mp3->stop();
-        }
+        mp3->loop();
     }
 }

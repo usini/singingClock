@@ -1,27 +1,13 @@
 // Date and time functions using a DS3231 RTC connected via I2C and Wire lib
 #include "RTClib.h"
-#include "timezone.h"
-#include <time.h>
-#include <TimeLib.h>
 
 time_t rtcToTime_T();
 
 RTC_DS3231 rtc;
 
-TimeChangeRule myDST = {"CEST", Last, Sun, Mar, 2, 120}; // Daylight time = UTC + 2 hours
-TimeChangeRule mySTD = {"CET", Last, Sun, Oct, 3, 60};   // Standard time = UTC + 1 hour
-Timezone myTZ(myDST, mySTD);
-TimeChangeRule *tcr;
-
-int currentHours = 0;
-int currentMinutes = 0;
-int currentSeconds = 0;
-
-String daysOfTheWeek[7] = {"Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"};
-
 bool rtcStart()
 {
-    Wire.begin(27, 22);
+    Wire.begin(I2C_SDA, I2C_SCL);
     if (!rtc.begin(&Wire))
     {
         if (rtc.lostPower())
@@ -67,40 +53,9 @@ time_t rtcToTime_T()
     return epoch_time;
 }
 
-String timeToString()
-{
-    //@todo Refactor
-    time_t utc = now();
-    time_t local = myTZ.toLocal(utc, &tcr);
-    int hours = hour(local);
-    int minutes = minute(local);
-    String Shours = String(hours);
-    String Sminutes = String(minutes);
-    if (minutes < 10)
-    {
-        Sminutes = "0" + Sminutes;
-    }
-    if (hours < 10)
-    {
-        Shours = "0" + Shours;
-    }
-    return Shours + ":" + Sminutes;
-}
-
-String dateToString()
-{
-    time_t utc = now();
-    time_t local = myTZ.toLocal(utc, &tcr);
-    String dayString = String(day(local) + 1);
-    String monthString = String(month(local));
-    String dayNameString = daysOfTheWeek[day(local) + 1];
-    return dayNameString + " " + dayString + "/" + monthString;
-}
-
 bool minuteTick()
 {
-    time_t utc = now();
-    time_t local = myTZ.toLocal(utc, &tcr);
+    time_t local = getLocalTime();
     int minutes = minute(local);
     int hours = hour(local);
     if (currentMinutes != minutes)
@@ -123,4 +78,9 @@ bool hourTick()
         return true;
     }
     return false;
+}
+
+DateTime serialTimeToDateTime(int time[])
+{
+    return DateTime(time[5], time[4], time[3], time[0], time[1], time[2]);
 }

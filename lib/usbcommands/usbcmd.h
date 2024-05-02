@@ -25,7 +25,7 @@ void cmdGetTime(SerialCommands *sender)
 
     char formattedTime[6];
     sprintf(formattedTime, "%02d:%02d", hours, minutes);
-    Serial.println("[⏲️TIME] - " + timeToString());
+    Serial.println("[⏲️TIME] - " + timeToString(false));
 }
 
 void cmdSetTime(SerialCommands *sender)
@@ -37,8 +37,8 @@ void cmdSetTime(SerialCommands *sender)
         value = sender->Next();
         time[i] = String(value).toInt();
     }
-    DateTime timeConversion = DateTime(time[5], time[4], time[3], time[0], time[1], time[2]);
-    rtc.adjust(timeConversion);
+    
+    rtc.adjust(serialTimeToDateTime(time));
     setSyncProvider(rtcToTime_T);
-    Serial.println("[⏲️TIME] - " + timeToString());
+    Serial.println("[⏲️TIME] - " + timeToString(false));
 }

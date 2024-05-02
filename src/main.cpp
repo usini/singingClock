@@ -1,11 +1,14 @@
 // Animates white pixels to simulate flying through a star field
 #include <Arduino.h>
-
 #include "peripherals.h"
+
+#include "timer_conversion.h"
 #include "timer_rtc.h"
+
 #include "ui.h"
 #include "audio.h"
 #include "usbcommands.h"
+
 bool redrawInProgress = false;
 bool screen_pressed = false;
 
@@ -16,33 +19,18 @@ void setup()
   serialInit();
   uiInit();
   audioInit();
-  // redrawBackground();
-  // redrawClock();
   rtcStart();
   playStartup();
 }
 
 void loop()
 {
-  // rtcLoop();
-  // redrawBackgroundNeeded = true;
   mp3Loop();
   serialLoop();
 
   if (minuteTick())
   {
-    //@todo Refactor
-    String Shours = String(currentHours);
-    String Sminutes = String(currentMinutes);
-    if (currentMinutes < 10)
-    {
-        Sminutes = "0" + Sminutes;
-    }
-    if (currentHours < 10)
-    {
-        Shours = "0" + Shours;
-    }
-    String path = "/time/" + Shours + "-" + Sminutes;
+    String path = "/time/" + timeToString(true);
     String audioFileToPlay = path + "/" + PickRandomFile(path);
     Serial.println(audioFileToPlay);
 
@@ -50,7 +38,7 @@ void loop()
     redrawInProgress = true;
     redrawBackground();
     redrawClock();
-    Serial.println("[⏲️TIME] - " + timeToString());
+    Serial.println("[⏲️TIME] - " + timeToString(false));
     redrawInProgress = false;
     if (SD.exists(audioFileToPlay))
     {
