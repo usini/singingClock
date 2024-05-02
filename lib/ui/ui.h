@@ -16,6 +16,12 @@ bool redrawBackgroundNeeded = true;
 bool redrawWifiIconNeeded = false;
 bool redrawClockNeeded = true;
 
+// TFT Time
+const int TIME_X = 55;
+const int TIME_Y = 52;
+const int DATE_X = 90;
+const int DATE_Y = 125:
+
 // TFT Buttons
 const int BUTTON_1_X = 12;
 const int BUTTON_2_X = 126;
@@ -64,19 +70,19 @@ void drawButton(int pos, int icon)
 
 void redrawClock()
 {
+    // Show Time
     txtSprite.loadFont("/Calibri-96", LittleFS);
     txtSprite.setCursor(0, 0);
     txtSprite.fillScreen(TFT_BLACK);
-    //String time = myTz.dateTime("H:i");
     txtSprite.print(timeToString(false));
-    txtSprite.pushSprite(55, 52, TFT_BLACK);
+    txtSprite.pushSprite(TIME_X, TIME_Y, TFT_BLACK);
 
+    // Show Date
     txt2Sprite.loadFont("/Calibri-24", LittleFS);
     txt2Sprite.setCursor(0, 0);
     txt2Sprite.fillScreen(TFT_BLACK);
-    String date = dateToString();
-    txt2Sprite.print(date);
-    txt2Sprite.pushSprite(100, 125, TFT_BLACK);
+    txt2Sprite.print(dateToString());
+    txt2Sprite.pushSprite(DATE_X, DATE_Y, TFT_BLACK);
 
     if (redrawClockNeeded)
     {
