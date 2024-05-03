@@ -20,7 +20,7 @@ bool redrawClockNeeded = true;
 const int TIME_X = 55;
 const int TIME_Y = 52;
 const int DATE_X = 90;
-const int DATE_Y = 125:
+const int DATE_Y = 125;
 
 // TFT Buttons
 const int BUTTON_1_X = 12;

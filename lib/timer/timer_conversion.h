@@ -48,8 +48,9 @@ String dateToString()
 {
     time_t utc = now();
     time_t local = myTZ.toLocal(utc, &tcr);
-    int dayInt = day(local) + 1;
+    int dayInt = day(local);
     int monthInt = month(local);
+    int dayWeekInt = weekday(local);
     String dayString = String(dayInt);
     String monthString = String(monthInt);
     if (dayInt < 10)
@@ -60,7 +61,7 @@ String dateToString()
     {
         monthString = "0" + monthString;
     }
-    String dayNameString = daysOfTheWeek[day(local) + 1];
+    String dayNameString = daysOfTheWeek[dayWeekInt-1];
     return dayNameString + " " + dayString + "/" + monthString;
 }
 
