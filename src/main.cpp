@@ -1,48 +1,49 @@
 // Animates white pixels to simulate flying through a star field
 #include <Arduino.h>
-#include "peripherals.h"
+#include "pinout.h"
+
+#include "Peripherals/Peripherals.h"
+TFT_eSPI tft = TFT_eSPI();
+Peripherals peripherals = Peripherals();
 
 #include "timer_conversion.h"
 #include "timer_rtc.h"
 
 #include "ui.h"
-#include "audio.h"
+#include "Audio/Audio.h"
 #include "usbcommands.h"
 
-bool redrawInProgress = false;
 bool screen_pressed = false;
+
+Audio audio = Audio();
+
 
 void setup()
 {
-  Serial.begin(115200);
-  peripheralsInit();
+  peripherals.setup();
   serialInit();
   uiInit();
-  audioInit();
+  audio.setup(I2S_SCLK,I2S_LRCK,I2S_DOUT);
   rtcStart();
-  playStartup();
+  audio.playStartup();
 }
 
 void loop()
 {
-  mp3Loop();
+  audio.loop();
   serialLoop();
 
   if (minuteTick())
   {
     String path = "/time/" + timeToString(true);
-    String audioFileToPlay = path + "/" + PickRandomFile(path);
+    String audioFileToPlay = path + "/" + peripherals.pickRandomFile(path);
     Serial.println(audioFileToPlay);
-
-    redrawBackgroundNeeded = true;
-    redrawInProgress = true;
     redrawBackground();
     redrawClock();
     Serial.println("[⏲️TIME] - " + timeToString(false));
-    redrawInProgress = false;
     if (SD.exists(audioFileToPlay))
     {
-      playFile(audioFileToPlay);
+      audio.playFile(audioFileToPlay);
     }
     else
     {

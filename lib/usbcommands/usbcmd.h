@@ -37,7 +37,6 @@ void cmdSetTime(SerialCommands *sender)
         value = sender->Next();
         time[i] = String(value).toInt();
     }
-    
     rtc.adjust(serialTimeToDateTime(time));
     setSyncProvider(rtcToTime_T);
     Serial.println("[⏲️TIME] - " + timeToString(false));

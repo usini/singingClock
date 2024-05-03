@@ -31,11 +31,7 @@ const int BUTTON_SIZE = 70;
 
 void redrawBackground()
 {
-    if (redrawBackgroundNeeded)
-    {
-        TJpgDec.drawFsJpg(0, 0, "/bg.jpg", LittleFS);
-        redrawBackgroundNeeded = false;
-    }
+    TJpgDec.drawFsJpg(0, 0, "/bg.jpg", LittleFS);
 }
 
 void drawButton(int pos, int icon)
@@ -83,11 +79,6 @@ void redrawClock()
     txt2Sprite.fillScreen(TFT_BLACK);
     txt2Sprite.print(dateToString());
     txt2Sprite.pushSprite(DATE_X, DATE_Y, TFT_BLACK);
-
-    if (redrawClockNeeded)
-    {
-        redrawClockNeeded = false;
-    }
 }
 
 void blinking_wifi()
