@@ -5,7 +5,7 @@ void cmdUnrecognized(SerialCommands *sender, const char *cmd)
 
 void cmdStatus(SerialCommands *sender)
 {
-    peripheralsStatus();
+    peripherals.status();
 }
 
 void cmdReboot(SerialCommands *sender)

@@ -1,39 +1,26 @@
-
-// Pinout
+#include "Peripherals.h"
 #include "pinout.h"
 
-// FileSystem / SD
-#include <FS.h>
-#include "LittleFS.h"
+bool draw_with_transparency = false;
 
-// Screen
-#include <TFT_eSPI.h>
-#include <TJpg_Decoder.h>
+bool jpgDraw(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *bitmap)
+{
+    if(draw_with_transparency){
+        tft.pushImage(x, y, w, h, bitmap, TFT_BLACK);
+    } else {
+        tft.pushImage(x, y, w, h, bitmap);
+    }
+    return 1;
+}
 
-#include <XPT2046_Bitbang.h>
-
-// Spi Device (we are forced to bitbang XPT2046 because we have 3 SPI Device and 2 SPI Bus)
-// Could probably make up for it with CS...
-TFT_eSPI tft = TFT_eSPI();
-//#include "decoder/png.h"
-#include "decoder/jpg.h"
-SPIClass spi_sd = SPIClass(VSPI);
-XPT2046_Bitbang ts = XPT2046_Bitbang(XPT2046_MOSI, XPT2046_MISO, XPT2046_CLK, XPT2046_CS);
-
-// Status for peripherals
-bool fsStatus = false;
-bool sdStatus = false;
-bool audioStatus = false;
-bool videoStatus = false;
-
-void getMemory()
+void Peripherals::getMemory()
 {
     char temp[300];
     sprintf(temp, "Heap: Free:%i, Min:%i, Size:%i, Alloc:%i", ESP.getFreeHeap(), ESP.getMinFreeHeap(), ESP.getHeapSize(), ESP.getMaxAllocHeap());
     Serial.println(temp);
 }
 
-bool screenInit()
+bool Peripherals::screenSetup()
 {
     Serial.println("[🖥️  Display] 👋 Init");
     tft.init();
@@ -46,7 +33,7 @@ bool screenInit()
     return true;
 }
 
-bool fsInit()
+bool Peripherals::fsSetup()
 {
     Serial.println("[💾 FS] 👋 Init");
     bool status = LittleFS.begin(false, "/flash");
@@ -61,7 +48,7 @@ bool fsInit()
     return status;
 }
 
-bool sdInit()
+bool Peripherals::SDSetup()
 {
     Serial.println("[💾 SD] 👋 Init");
     spi_sd.begin(SD_SCK, SD_MISO /* MISO */, SD_MOSI /* MOSI */, SD_CS /* SS */);
@@ -77,7 +64,7 @@ bool sdInit()
     return status;
 }
 
-void peripheralsStatus()
+void Peripherals::status()
 {
     if (fsStatus)
     {
@@ -105,24 +92,22 @@ void peripheralsStatus()
     }
 }
 
-bool peripheralsInit()
+bool Peripherals::setup()
 {
     randomSeed(analogRead(34));
-    fsStatus = fsInit();
-    sdStatus = sdInit();
-    videoStatus = screenInit();
-    // bool audioStatus = audio_init();
-    if (videoStatus && sdStatus && fsInit)
+    fsStatus = fsSetup();
+    sdStatus = SDSetup();
+    videoStatus = screenSetup();
+    if (videoStatus && sdStatus && fsStatus)
     {
         return true;
     }
-    else
-    {
-        return false;
-    }
+    return false;
 }
 
-String PickRandomFile(String folder){
+
+
+String Peripherals::pickRandomFile(String folder){
     File root = SD.open(folder);
     if(!root || !root.isDirectory()){
         Serial.println("Folder not exists");

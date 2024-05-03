@@ -1,6 +1,6 @@
 
-#ifndef AUDIO_PLAYER_H
-#define AUDIO_PLAYER_H
+#ifndef AUDIO_H
+#define AUDIO_H
 
 #include "AudioFileSourceSD.h"
 #include "AudioGeneratorMP3.h"
@@ -18,4 +18,4 @@ class Audio{
         AudioOutputI2S *out;
 };
 
-#endif // AUDIO_PLAYER_H
+#endif // AUDIO_H
