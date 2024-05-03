@@ -4,7 +4,7 @@ void Audio::setup(int sclk, int lrck, int dout)
 {
     audioLogger = &Serial;
     out = new AudioOutputI2S();
-    out->SetGain(0.05);
+    out->SetGain(0.5);
     out->SetPinout(sclk, lrck, dout);
     mp3 = new AudioGeneratorMP3();
 }
@@ -14,6 +14,16 @@ void Audio::playFile(String filename)
     Serial.println("[🎵 SD] Playing " + filename);
     audioFile = new AudioFileSourceSD(filename.c_str());
     mp3->begin(audioFile, out);
+}
+
+void Audio::mute()
+{
+    out->SetGain(0);
+}
+
+void Audio::unmute()
+{
+    out->SetGain(0.5);
 }
 
 void Audio::playStartup()

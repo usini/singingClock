@@ -13,7 +13,6 @@ int currentSeconds = 0;
 
 String daysOfTheWeek[7] = {"Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"};
 
-
 time_t getLocalTime()
 {
     time_t utc = now();
@@ -44,6 +43,19 @@ String timeToString(bool isFilePath)
     return hourString + ":" + minuteString;
 }
 
+String timeToStringHourOnly()
+{
+    //@todo Refactor
+    time_t local = getLocalTime();
+    int hourInt = hour(local);
+    String hourString = String(hourInt);
+    if (hourInt < 10)
+    {
+        hourString = "0" + hourString;
+    }
+    return hourString + "-00";
+}
+
 String dateToString()
 {
     time_t utc = now();
@@ -61,7 +73,6 @@ String dateToString()
     {
         monthString = "0" + monthString;
     }
-    String dayNameString = daysOfTheWeek[dayWeekInt-1];
+    String dayNameString = daysOfTheWeek[dayWeekInt - 1];
     return dayNameString + " " + dayString + "/" + monthString;
 }
-

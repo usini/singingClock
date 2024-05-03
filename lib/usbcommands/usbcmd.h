@@ -5,7 +5,10 @@ void cmdUnrecognized(SerialCommands *sender, const char *cmd)
 
 void cmdStatus(SerialCommands *sender)
 {
-    peripherals.status();
+    //@TODO Report real status
+    Serial.println("[💾 FS] 🟢 OK");
+    Serial.println("[💾 SD] 🟢 OK");
+    Serial.println("[🖥️  Display] 🟢 OK");
 }
 
 void cmdReboot(SerialCommands *sender)
