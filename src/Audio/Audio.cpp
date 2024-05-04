@@ -11,6 +11,9 @@ void Audio::setup(int sclk, int lrck, int dout)
 
 void Audio::playFile(String filename)
 {
+    if(mp3->isRunning()){
+        mp3->stop();
+    }
     Serial.println("[🎵 SD] Playing " + filename);
     audioFile = new AudioFileSourceSD(filename.c_str());
     mp3->begin(audioFile, out);

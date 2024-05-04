@@ -17,8 +17,20 @@ Audio audio = Audio();
 Filesystem filesystem = Filesystem();
 Screen screen = Screen();
 
-bool buttonState[3];
-bool buttonRedrawNeeded[3];
+bool buttonState[3] = {false, false, false};
+
+void redrawButtons()
+{
+  if (buttonState[0])
+  {
+    screen.drawButton(0, SOUND_MUTE);
+  }
+  else
+  {
+    screen.drawButton(0, SOUND_PLAY);
+  }
+  screen.drawButton(2, PLAY);
+}
 
 void setup()
 {
@@ -37,12 +49,11 @@ void loop()
 
   if (minuteTick())
   {
-
     screen.redrawBackground();
     screen.redrawClock(timeToString(false), dateToString());
-    screen.drawButton(0, SOUND_PLAY);
-    screen.drawButton(2, PLAY);
+    redrawButtons();
     Serial.println("[⏲️TIME] - " + timeToString(false));
+    Serial.println("[🗓️ DAY] - " + String(dayWeek()));
 
     String path = "/time/" + timeToString(true);
     String audioFileToPlay = path + "/" + filesystem.pickRandomFile(path);
@@ -61,6 +72,7 @@ void loop()
 
   if (p.zRaw > 200 && !screen_pressed)
   {
+    //@todo Not optimized should redraw just the button
     screen_pressed = true;
     Serial.print("[🖥️ 👉 Display] Touch: ");
     Serial.print(p.x);
@@ -72,16 +84,16 @@ void loop()
       Serial.println("Button Pressed");
       if (p.x >= 30 && p.x <= 100)
       {
-        Serial.println("Mute");
+
         if (buttonState[0])
         {
-          screen.drawButton(0, SOUND_MUTE);
-          audio.mute();
+          Serial.println("UnMute");
+          audio.unmute();
         }
         else
         {
-          screen.drawButton(0, SOUND_PLAY);
-          audio.unmute();
+          Serial.println("Mute");
+          audio.mute();
         }
         buttonState[0] = !buttonState[0];
       }
@@ -100,10 +112,15 @@ void loop()
           Serial.println("No file for this time...");
         }
       }
+      screen.redrawBackground();
+      screen.redrawClock(timeToString(false), dateToString());
+      redrawButtons();
     }
-    if (p.zRaw <= 200 && screen_pressed)
-    {
-      screen_pressed = false;
-    }
+  }
+
+  if (p.zRaw <= 200 && screen_pressed)
+  {
+    Serial.println("Unpressed");
+    screen_pressed = false;
   }
 }

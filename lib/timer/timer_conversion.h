@@ -76,3 +76,11 @@ String dateToString()
     String dayNameString = daysOfTheWeek[dayWeekInt - 1];
     return dayNameString + " " + dayString + "/" + monthString;
 }
+
+int dayWeek()
+{
+    time_t utc = now();
+    time_t local = myTZ.toLocal(utc, &tcr);
+    int dayWeekInt = weekday(local);
+    return dayWeekInt - 1;
+}
