@@ -16,6 +16,8 @@ class Audio{
         void mute();
         void unmute();
     private:
+        bool isMute = false;
+        bool isRunning = false;
         AudioGeneratorMP3 *mp3;
         AudioFileSourceSD *audioFile;
         AudioOutputI2S *out;
