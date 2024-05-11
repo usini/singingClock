@@ -1,0 +1,54 @@
+<!doctype html>
+<html id="theme" data-theme="dark" lang="en">
+
+<head>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="static/css/pico.min.css">
+        <title></title>
+
+        <style>
+            @media screen and (min-width: 900px) {
+                img {
+                    width: 128px;
+                    height: 128px;
+                }
+
+                @media screen and (min-width: 1200px) {
+                    img {
+                        width: 128px;
+                        height: 128px;
+                    }
+        </style>
+    </head>
+
+<body style="opacity:0;">
+    <div w3-include-html="navbar.html"></div>
+    <div class="container">
+        <figure>
+            <table role="grid">
+                <thead>
+                    <tr>
+                        <th scope="col">Vendeur</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Prix</th>
+                        <th scope="col">Lien</th>
+                        <th scope="col">Statut</th>
+                    </tr>
+                </thead>
+                <tbody id="components">
+
+                </tbody>
+
+            </table>
+            <h1 id="total">Total: </h1>
+        </figure>
+        <button onclick="window.location='index.html'">Go back</button>
+    </div>
+</body>
+
+<script type="text/javascript" src="static/js/default.js"></script>
+<script type="text/javascript" src="static/js/buy.js"></script>

@@ -1,0 +1,40 @@
+[
+    {
+        "name": "CYD ESP32-2432S028R",
+        "img": "custom/images/cyd_front.svg",
+        "store": [
+            {
+                "name": "Aliexpress",
+                "price": 13.47,
+                "link": "https://s.click.aliexpress.com/e/_DBZtBS7"
+            },
+            {
+                "name": "Amazon",
+                "price": 23.99,
+                "link": "https://www.amazon.fr/Binghe-d%C3%A9veloppement-Intelligent-Connectivit%C3%A9-Compatible/dp/B0CWTNLB1B"
+            }
+        ]
+    },
+    {
+        "name": "PCM5102",
+        "img": "custom/images/audio_dac_I2S_gy_pcm5102.svg",
+        "store": [
+            {
+                "name": "Aliexpress",
+                "price": 3.00,
+                "link": "https://s.click.aliexpress.com/e/_DF5cBXl"
+            }
+        ]
+    },
+    {
+        "name": "DS3231",
+        "img": "custom/images/ds3231_classic.svg",
+        "store": [
+            {
+                "name": "Aliexpress",
+                "price": 1.35,
+                "link": "https://s.click.aliexpress.com/e/_DCds5Pd"
+            }
+        ]
+    }
+]

@@ -1,0 +1,31 @@
+<!doctype html>
+<html id="theme" data-theme="dark" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="static/css/pico.min.css">
+    <title></title>
+    <style>
+
+    </style>
+</head>
+
+<body style="opacity:0;">
+    <div w3-include-html="navbar.html"></div>
+    <div class="container">
+        <center>
+            <div id="diagram"></div>
+            <button onclick="window.location='index.html'">Go back</button>
+        </center>
+    </div>
+</body>
+
+<script type="text/javascript" src="static/js/default.js"></script>
+<script type="text/javascript" src="static/js/svg.js"></script>
+<script type="text/javascript" src="static/js/anime.min.js"></script>
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
+<script>
+    load_svg("svg/nyanbox_schematics.svg", "diagram");
+</script>
