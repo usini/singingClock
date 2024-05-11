@@ -46,7 +46,7 @@ async function randomAudio(forced) {
     }
     const response = await fetch(path + ".txt");
     fileNames = (await response.text()).trim();
-    fileNames = fileNames.split("\r\n");
+    fileNames = fileNames.split("\n");
     audioFile = fileNames[Math.floor(Math.random() * fileNames.length)];
     audio_element.src = path + "/" + audioFile
     audio_element.play();
