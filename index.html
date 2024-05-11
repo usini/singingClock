@@ -4,62 +4,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="static/css/pico.min.css">
+    <link rel="stylesheet" href="static/css/libs/pico.min.css">
+    <link rel="stylesheet" href="static/css/style.css">
     <title></title>
-    <style>
-        html {
-            scroll-behavior: smooth;
-        }
-        h1{
-            margin-bottom: 0px;
-        }
-        nav {
-            margin-bottom: -90px;
-        }
-
-        .menu_item {
-            transition: transform 0.2s;
-            opacity: 0.8;
-        }
-
-        .menu_item:hover {
-            opacity: 1;
-            transform: rotate(5deg);
-        }
-
-        #laufie_box {
-            transition: transform 1s;
-        }
-
-        #scrolly {
-            position: fixed;
-            bottom: 5vh;
-            right: 5vh;
-            cursor: pointer;
-            opacity: 0.4;
-            text-align: center;
-            background-color: grey;
-            font-size: 52px;
-            border-radius: 100px;
-            width: 82px;
-            height: 82px;
-            padding: 10px;
-            padding-top: 1px;
-
-        }
-
-        #laufie {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-    </style>
 </head>
 
 <body style="opacity:0;">
     <div w3-include-html="navbar.html"></div>
-
     <center>
         <article>
             <header>
@@ -71,45 +22,40 @@
         </article>
         <div id="product"></div>
     </center>
-    <div id="menu" class="container-fluid">
-        <div class="grid">
-            <div class="menu_item">
-                <center>
-                    <a href="buy.html" class="menu_item">
-                        <h2>Achat</h2>
-                        <img src="static/svg/icons/buy.svg">
-                    </a>
-                </center>
+    <div id="menu" class="menu_vertical">
+        <div class="menu_item">
+            <center>
+                <a href="buy.html" class="menu_item">
+                    <h2>Acheter</h2>
+                    <img src="static/svg/icons/buy.svg">
+                </a>
+            </center>
+        </div>
+        <div class="menu_item">
+            <center>
+                <a href="solder.html" class="menu_item">
+                    <h2>Fabriquer</h2>
+                    <img src="static/svg/icons/soldering.svg">
+                </a>
+            </center>
 
+        </div>
+        <div class="menu_item">
+            <center>
+                <a href="upload.html" class="menu_item">
+                    <h2>Programmer</h2>
+                    <img src="static/svg/icons/upload.svg">
+                </a>
+            </center>
 
-            </div>
-            <div class="menu_item">
-                <center>
-                    <a href="solder.html" class="menu_item">
-                        <h2>Soudure</h2>
-                        <img src="static/svg/icons/soldering.svg">
-                    </a>
-                </center>
-
-            </div>
-            <div class="menu_item">
-                <center>
-                    <a href="upload.html" class="menu_item">
-                        <h2>Programmation</h2>
-                        <img src="static/svg/icons/upload.svg">
-                    </a>
-                </center>
-
-            </div>
-            <div class="menu_item">
-                <center>
-                    <a href="printing.html" class="menu_item">
-                        <h2>Boitier</h2>
-                        <img src="static/svg/icons/printing.svg">
-                    </a>
-                </center>
-
-            </div>
+        </div>
+        <div class="menu_item">
+            <center>
+                <a href="printing.html" class="menu_item">
+                    <h2>Boitier</h2>
+                    <img src="static/svg/icons/printing.svg">
+                </a>
+            </center>
 
         </div>
     </div>
@@ -122,24 +68,5 @@
 <script type="text/javascript" src="static/js/libs/anime.min.js"></script>
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="https://unpkg.com/tippy.js@6"></script>
-<script>
-    /*
-      <div id="scrolly" onclick="goscroll()"><img src="svg/down-arrow.svg"></div>
-     window.addEventListener('scroll', function () {
-         let scroll = window.scrollY;
-         if (scroll >= 300) {
-             document.getElementById("scrolly").style.display = "none";
-         } else {
-             document.getElementById("scrolly").style.display = "";
-         }
-     });
-     function goscroll() {
-         window.scrollTo(0, 800);
-     }
-     */
-
-</script>
-
-
 
 </html>

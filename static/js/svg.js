@@ -5,7 +5,7 @@ function load_svg(svg_file, element) {
         document.getElementById(element).innerHTML = svg;
 
         //Resize SVG to the size of the buttons underneath
-        //resize_svg(element);
+        resize_svg(element);
         const event = new Event("svgLoaded");
         document.dispatchEvent(event);
     }).catch(function (error) {
@@ -15,7 +15,8 @@ function load_svg(svg_file, element) {
 
 function resize_svg(element) {
     console.log("Resize_svg");
-    document.getElementById(element).children[0].setAttribute("width", document.getElementById("menu").offsetWidth);
+    console.log(window.screen.width);
+    document.getElementById(element).children[0].setAttribute("width", window.clientWidth);
 }
 
 // Responsive SVG

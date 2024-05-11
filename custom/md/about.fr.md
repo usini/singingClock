@@ -4,17 +4,18 @@
 
 # µsini horloge chantante
 
-L'horloge chantante est une idée de Rémi et Olivier Sarrailh, créer une horloge qui exploite le potentiel de la génération IA pour créer une horloge parlante simple à mettre en place.
+L'horloge chantante est une idée de Rémi et Olivier Sarrailh, créer une horloge qui exploite le potentiel de la génération IA pour créer une horloge parlante amusante pour un fablab.
 
 # Données personnelles
 Aucune données personnelles n'est transmises par ce site, le site web est entièrement statique et vous pouvez l'héberger sur votre propre plateforme.
 Le code a été pensé de façon à pouvoir fonctionner hors-ligne.
 
 # Licence
+Le programme est sous Licence MIT
 
 ## Diagrammes
 
-* Les diagrammes sont sous [licence CC-O](https://fr.wikipedia.org/wiki/Licence_CC0)    
+* Les diagrammes sont sous [licence CC-O](https://fr.wikipedia.org/wiki/Licence_CC0)
 ![Licence_CC0](custom/md/CC_Zero_badge.svg.png)
 Vous pouvez les retrouver ici : https://github.com/usini/diagrams
 

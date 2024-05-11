@@ -1,0 +1,42 @@
+@media (max-width: 576px) {
+    h3 {
+        font-size: 15px;
+    }
+
+    h2 {
+        font-size: 15px;
+    }
+
+    article {
+        padding:0px;
+    }
+
+}
+
+h1 {
+    margin-bottom: 0px;
+}
+
+article {
+    margin: 0px;
+}
+
+
+.menu_vertical {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.menu_item {
+    width: calc(25% - 10px);
+    /* Répartit les éléments sur 4 colonnes avec un espace entre */
+    margin-bottom: 20px;
+    transition: transform 0.2s;
+    opacity: 0.8;
+}
+
+.menu_item:hover {
+    opacity: 1;
+    transform: rotate(5deg);
+}
