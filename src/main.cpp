@@ -1,132 +1,126 @@
 // Animates white pixels to simulate flying through a star field
 #include <Arduino.h>
-#include "peripherals.h"
-#include "internet.h"
-#include "ui.h"
-#include "timer.h"
+#include "pinout.h"
+
+#include "Filesystem/Filesystem.h"
+#include "Screen/Screen.h"
+
+#include "timer_conversion.h"
+#include "timer_rtc.h"
+
+#include "Audio/Audio.h"
 #include "usbcommands.h"
 
 bool screen_pressed = false;
 
+Audio audio = Audio();
+Filesystem filesystem = Filesystem();
+Screen screen = Screen();
+
+bool buttonState[3] = {false, false, false};
+
+void redrawButtons()
+{
+  if (buttonState[0])
+  {
+    screen.drawButton(0, SOUND_MUTE);
+  }
+  else
+  {
+    screen.drawButton(0, SOUND_PLAY);
+  }
+  screen.drawButton(2, PLAY);
+}
+
 void setup()
 {
-  Serial.begin(115200);
-  peripheralsInit();
-  wifiStart();
   serialInit();
-  uiInit();
+  filesystem.setup();
+  screen.setup();
+  audio.setup(I2S_SCLK, I2S_LRCK, I2S_DOUT);
+  rtcStart();
+  audio.playStartup();
 }
 
 void loop()
 {
-  redrawBackgroundNeeded = true;
+  audio.loop();
   serialLoop();
 
-  if (minuteTick() || redrawClockNeeded)
+  if (minuteTick())
   {
-    redrawInProgress = true;
-    redrawBackground();
-    redraw_clock();
+    screen.redrawBackground();
+    screen.redrawClock(timeToString(false), dateToString());
+    redrawButtons();
+    Serial.println("[⏲️TIME] - " + timeToString(false));
+    Serial.println("[🗓️ DAY] - " + String(dayWeek()));
 
-    for (int i = 0; i < 3; i++)
+    String path = "/time/" + timeToString(true);
+    String audioFileToPlay = path + "/" + filesystem.pickRandomFile(path);
+    Serial.println(audioFileToPlay);
+    if (SD.exists(audioFileToPlay))
     {
-      buttonRedrawNeeded[i] = true;
-    }
-
-    if (connected)
-    {
-      redraw_wifi_icon();
-    }
-    Serial.println("[⏲️TIME] - " + myTz.dateTime("H:i"));
-    redrawInProgress = false;
-  }
-  if (!connected)
-  {
-    if (secondTick())
-    {
-      redrawInProgress = true;
-      blinking_wifi();
-      redrawInProgress = false;
-    }
-  }
-
-  if (buttonRedrawNeeded[0])
-  {
-    redrawInProgress = true;
-    if (buttonState[0])
-    {
-      drawButton(0, LIGHT_ON);
+      audio.playFile(audioFileToPlay);
     }
     else
     {
-      drawButton(0, LIGHT_OFF);
+      Serial.println("No file for this time...");
     }
-    buttonRedrawNeeded[0] = false;
-    redrawInProgress = false;
   }
 
-  TouchPoint p = ts.getTouch();
+  TouchPoint p = screen.ts.getTouch();
 
   if (p.zRaw > 200 && !screen_pressed)
   {
+    //@todo Not optimized should redraw just the button
     screen_pressed = true;
-    if (p.y >= 160)
-    {
-      if (p.x >= 30 && p.x <= 100)
-      {
-        Serial.println("Button 1 Pressed");
-        if (buttonState[0])
-        {
-          if (mqttConnected)
-          {
-            mqttClient.publish("lampe/salon/command", 1, false, "off");
-          }
-        }
-        else
-        {
-          if (mqttConnected)
-          {
-            mqttClient.publish("lampe/salon/command", 1, false, "on");
-          }
-        }
-        buttonState[0] = !buttonState[0];
-      }
-      if (p.x >= 120 && p.x <= 190)
-      {
-        Serial.println("Button 1 Pressed");
-        if (buttonState[1])
-        {
-
-        }
-        else
-        {
-
-        }
-        buttonState[1] = !buttonState[1];
-      }
-      if (p.x >= 220)
-      {
-        Serial.println("Button 1 Pressed");
-        if (buttonState[2])
-        {
-
-        }
-        else
-        {
-
-        }
-        buttonState[2] = !buttonState[2];
-      }
-    }
-
-    Serial.print("[🖥️👉 Display] Touch: ");
+    Serial.print("[🖥️ 👉 Display] Touch: ");
     Serial.print(p.x);
     Serial.print(",");
     Serial.println(p.y);
     delay(100);
+    if (p.y >= 160)
+    {
+      Serial.println("Button Pressed");
+      if (p.x >= 30 && p.x <= 100)
+      {
+
+        if (buttonState[0])
+        {
+          Serial.println("UnMute");
+          audio.unmute();
+        }
+        else
+        {
+          Serial.println("Mute");
+          audio.mute();
+        }
+        buttonState[0] = !buttonState[0];
+      }
+      else if (p.x >= 220)
+      {
+        Serial.println("Button Pressed : Play");
+        String path = "/time/" + timeToStringHourOnly();
+        String audioFileToPlay = path + "/" + filesystem.pickRandomFile(path);
+        Serial.println(audioFileToPlay);
+        if (SD.exists(audioFileToPlay))
+        {
+          audio.playFile(audioFileToPlay);
+        }
+        else
+        {
+          Serial.println("No file for this time...");
+        }
+      }
+      screen.redrawBackground();
+      screen.redrawClock(timeToString(false), dateToString());
+      redrawButtons();
+    }
   }
+
   if (p.zRaw <= 200 && screen_pressed)
   {
+    Serial.println("Unpressed");
     screen_pressed = false;
   }
 }

@@ -5,16 +5,10 @@ void cmdUnrecognized(SerialCommands *sender, const char *cmd)
 
 void cmdStatus(SerialCommands *sender)
 {
-    peripheralsStatus();
-    Serial.println("[📶 WIFI] 🏷️ SSID - " + wifiSSID);
-    if (connected)
-    {
-        Serial.println("[📶 WIFI] 🟢 OK");
-    }
-    else
-    {
-        Serial.println("[📶 WIFI] 🔴 FAILED");
-    }
+    //@TODO Report real status
+    Serial.println("[💾 FS] 🟢 OK");
+    Serial.println("[💾 SD] 🟢 OK");
+    Serial.println("[🖥️  Display] 🟢 OK");
 }
 
 void cmdReboot(SerialCommands *sender)
@@ -23,16 +17,18 @@ void cmdReboot(SerialCommands *sender)
     ESP.restart();
 }
 
-void cmdSSID(SerialCommands *sender)
-{
-    char *value = sender->Next();
-    wifiSSID = value;
-    Serial.println("[📶 WIFI] 🏷️ SSID Changed to - " + wifiSSID);
-}
-
 void cmdGetTime(SerialCommands *sender)
 {
-    Serial.println("[⏲️TIME] - " + myTz.dateTime("H:i"));
+    //Serial.println("[⏲️TIME] - " + myTz.dateTime("H:i"));
+    //rtc.dateTime();
+    time_t utc = now();
+    time_t local = myTZ.toLocal(utc, &tcr);
+    int hours = hour(local);
+    int minutes = minute(local);
+
+    char formattedTime[6];
+    sprintf(formattedTime, "%02d:%02d", hours, minutes);
+    Serial.println("[⏲️TIME] - " + timeToString(false));
 }
 
 void cmdSetTime(SerialCommands *sender)
@@ -44,28 +40,7 @@ void cmdSetTime(SerialCommands *sender)
         value = sender->Next();
         time[i] = String(value).toInt();
     }
-    myTz.setTime(time[0], time[1], time[2], time[3], time[4], time[5]);
-    Serial.println("[⏲️TIME] - " + myTz.dateTime("H:i"));
-}
-
-void cmdPass(SerialCommands *sender)
-{
-    char *value = sender->Next();
-    wifiPassword = value;
-    Serial.println("[📶 WIFI] 🏷️ Password Changed");
-}
-
-void cmdWifi(SerialCommands *sender)
-{
-    char *value = sender->Next();
-    String arg = String(value);
-    if (arg == "restart")
-    {
-        wifiChange = true;
-        Serial.println("[📶 WIFI] ♾️ Restart");
-    }
-    else
-    {
-        Serial.println("[🔌USB] - Invalid command: wifi§" + arg);
-    }
+    rtc.adjust(serialTimeToDateTime(time));
+    setSyncProvider(rtcToTime_T);
+    Serial.println("[⏲️TIME] - " + timeToString(false));
 }
