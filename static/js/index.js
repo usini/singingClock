@@ -3,4 +3,4 @@ document.addEventListener("langLoaded", () => {
     document.getElementById("product_description").innerHTML = custom_variable["lang"].product_description;
 });
 
-load_svg("custom/images/product.svg", "product");
+load_svg("custom/page/index.svg", "product");

@@ -11,6 +11,11 @@
         padding:0px;
     }
 
+    #diagram {
+        margin-top: -150px;
+        margin-bottom: -150px;
+    }
+
 }
 
 h1 {
@@ -20,6 +25,7 @@ h1 {
 article {
     margin: 0px;
 }
+
 
 
 .menu_vertical {

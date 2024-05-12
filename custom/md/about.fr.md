@@ -16,7 +16,7 @@ Le programme est sous Licence MIT
 ## Diagrammes
 
 * Les diagrammes sont sous [licence CC-O](https://fr.wikipedia.org/wiki/Licence_CC0)
-![Licence_CC0](custom/md/CC_Zero_badge.svg.png)
+![Licence_CC0](custom/images/CC_Zero_badge.svg.png)
 Vous pouvez les retrouver ici : https://github.com/usini/diagrams
 
 ## Bibliothèques utilisés par le site

@@ -6,6 +6,11 @@ function load_svg(svg_file, element) {
 
         //Resize SVG to the size of the buttons underneath
         resize_svg(element);
+        // Observe orientation change to resize SVG
+        window.addEventListener("resize", (event) => {
+            resize_svg(element)
+        });
+
         const event = new Event("svgLoaded");
         document.dispatchEvent(event);
     }).catch(function (error) {
@@ -14,16 +19,21 @@ function load_svg(svg_file, element) {
 }
 
 function resize_svg(element) {
-    console.log("Resize_svg");
-    console.log(window.screen.width);
-    document.getElementById(element).children[0].setAttribute("width", window.clientWidth);
+    console.log(window.innerWidth);
+    document.getElementById(element).children[0].setAttribute("width", window.visualViewport.width);
+}
+function move_svg(element, x, y) {
+    document.getElementById(element).setAttribute("transform", "translate(" + x + "," + y + ")");
+}
+// Responsive SVG
+function animated_svg(element, speed) {
+    document.getElementById(element).style.transition = "transform " + speed + "s ease";
 }
 
-// Responsive SVG
+function stopanimated_svg(element) {
+    document.getElementById(element).style.transition = "";
+}
 
-// Observe orientation change to resize SVG
-//window.addEventListener("resize", (event) => {
-//    resize_svg()
-//});
-
-
+function rotate_svg(element, deg, x, y) {
+    document.getElementById(element).setAttribute("transform", "rotate(" + deg + "," + x + "," + y + ")");
+}
