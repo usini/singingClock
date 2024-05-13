@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="static/css/libs/pico.min.css">
+    <link rel="stylesheet" href="static/css/libs/pico.colors.min.css">
     <link rel="stylesheet" href="static/css/style.css">
     <title></title>
 </head>
@@ -12,19 +13,18 @@
 <body style="opacity:0;">
     <div w3-include-html="navbar.html"></div>
     <center>
-        <div class="container">
-            <button onclick="window.location='index.html'">Go back</button>
+        <div role="group">
+            <button class="pico-background-red" style="border:0px" id="previous" onclick="">⬅️ Précédent</button>
+            <button class="pico-background-green" style="border:0px" id="next" onclick="">➡️ Suivant</button>
         </div>
-        <div id="md1"></div>
+        <div id="text"></div>
 
-        <div id="diagram"></div>
+        <div id="image"></div>
 
     </center>
 </body>
 
 <script type="text/javascript" src="static/js/libs/marked/marked.min.js"></script>
-
 <script type="text/javascript" src="static/js/default.js"></script>
 <script type="text/javascript" src="static/js/svg.js"></script>
 <script type="text/javascript" src="static/js/make.js"></script>
-<script type="text/javascript" src="custom/page/make/make.js"></script>

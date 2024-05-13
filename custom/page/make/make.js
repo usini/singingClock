@@ -1,32 +1,32 @@
 document.addEventListener("svgLoaded", () => {
-    cutter_reset();
+    cutter_1();
 });
 
-function cutter_reset(){
+function cutter_1(){
     console.log("Cutter Reset");
     stopanimated_svg("cutter");
-    move_svg("cutter", -120, 54)
-    setTimeout(cutter_down, 200);
+    move_svg("cutter", 0, 0)
+    setTimeout(cutter_2, 200);
 }
 
-function cutter_down(){
+function cutter_2(){
     console.log("Cutter Down");
     animated_svg("cutter",3);
-    move_svg("cutter", 0, 54)
-    setTimeout(cutter_up_position, 3200);
+    move_svg("cutter", 101, 1)
+    setTimeout(cutter_3, 3200);
 }
 
-function cutter_up_position(){
+function cutter_3(){
     console.log("Cutter Up Position");
     stopanimated_svg("cutter");
-    rotate_svg("cutter",180,215,72)
-    setTimeout(cutter_up, 200);
+    rotate_svg("cutter",180,165,100)
+    setTimeout(cutter_4, 200);
 }
 
-function cutter_up(){
+function cutter_4(){
     console.log("Cutter Up");
     animated_svg("cutter",3);
-    rotate_svg("cutter", 180, 157,72);
-    setTimeout(cutter_reset, 3200);
+    rotate_svg("cutter", 180, 115,100);
+    setTimeout(cutter_1, 3200);
 }
 
