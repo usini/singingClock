@@ -1,3 +1,5 @@
+console.log("~~~~~~ 📄 PAGE GENERATOR ~~~~~~~~~~~~");
+
 includeHTML();
 custom_variable = {};
 
@@ -8,7 +10,7 @@ async function json_to_text(var_link, variable) {
       throw new Error("Can't find " + var_link)
     }
     const jsonData = await response.json();
-    console.log("--> " + var_link + " -> " + variable);
+    console.log("🗓️ [JSON] " + var_link + " -> custom_variable." + variable);
     custom_variable[variable] = jsonData;
     const event = new Event(variable + "Loaded");
     document.dispatchEvent(event);
@@ -32,13 +34,11 @@ if (localStorage.getItem("data-theme") == null) {
 }
 
 document.addEventListener("langLoaded", () => {
-  console.log("Lang Loaded");
   document.getElementById("product_name_navbar").innerHTML = custom_variable["lang"].product_name;
   document.title = custom_variable["lang"].product_name;
 });
 
 document.addEventListener("settingsLoaded", () => {
-  console.log("Settings Loaded");
   document.getElementById("source_link").href = custom_variable["settings"].git_link;
 });
 
@@ -79,6 +79,7 @@ function includeHTML() {
           if (this.status == 404) { elmnt.innerHTML = "Page not found."; }
           /* Remove the attribute, and call this function once more: */
           elmnt.removeAttribute("w3-include-html");
+          console.log("📖 [HTML] " + file + ' ->  w3-include-html="'+file+'"');
           includeHTML();
           change_theme_icon();
         }
@@ -89,4 +90,17 @@ function includeHTML() {
       return;
     }
   }
+}
+
+function includeMD(url, id) {
+  if (navigator.language.includes("fr")) {
+    page = "custom/page/" + url + "/translation/"+id+".fr.md";
+  } else {
+    page = url +"/" + id+".md";
+  }
+
+  fetch(page).then(response => response.text()).then(function (text) {
+    console.log('📖 [MD] ' + page + ' -> id="' + id + '"');
+    document.getElementById(id).innerHTML = marked.parse(text);
+  });
 }

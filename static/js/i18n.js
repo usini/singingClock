@@ -20,6 +20,7 @@ function translate_all(lang) {
         for (const [key, value] of Object.entries(document.querySelectorAll(".i18n"))) {
             translation = value.innerHTML;
             if (lang[translation] !== undefined) {
+                console.log("🗣️[LANG] " + value.innerHTML + " -> " + lang[translation]);
                 value.innerHTML = lang[translation];
             }
         }

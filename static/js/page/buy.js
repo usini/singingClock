@@ -2,7 +2,8 @@ product_variable = {}
 
 
 function update_link() {
-    fetch("custom/buy/buy.json").then(response => response.json()).then(function (json) {
+    console.log("🗓️ [JSON] custom/buy.json -> " + 'id="components"')
+    fetch("custom/buy.json").then(response => response.json()).then(function (json) {
         product_variable = json;
         reload_save();
         table = "";
@@ -17,7 +18,7 @@ function update_link() {
             `;
             store_id = 0
             component.store.forEach((element) => {
-                console.log(element);
+                //console.log(element);
                 if (store_id == custom_variable.buy[item_id].store) {
                     table += `
                     <option value=${store_id} selected>${element.name}</option>
@@ -62,22 +63,22 @@ function reload_save() {
     if (localStorage.getItem("buy" + custom_variable["id"]) != null) {
 
         try {
-            console.log("Loading save");
+            console.log("💾 [localStorage] localStorage.buy founded");
         } catch (error) {
-            console.log("Save corrupted reset");
+            console.log("🔴💾 [localStorage] localStorage.buy Corrupted need to reset");
             build_save();
         }
     } else {
-        console.log("Create save");
+        console.log("💾 [localStorage] custom_variable.buy -> localStorage.buy");
         build_save();
 
     }
     custom_variable.buy = JSON.parse(localStorage.getItem("buy" + custom_variable["id"]));
     if (custom_variable.buy.length != product_variable.length) {
-        console.log("Save unsync for product list : need rebuild")
+        console.log("💾 [localStorage] 🔴 Unsync buy.json with localstorage reset");
         build_save();
     } else {
-        console.log("Save sync");
+        console.log("💾 [localStorage] localStorage.buy -> custom_variable.buy");
     }
 }
 
@@ -89,11 +90,12 @@ function build_save() {
             "status": 0
         })
     };
-    console.log(custom_variable.buy);
+    //console.log(custom_variable.buy);
     save();
 }
 
 function save() {
+    console.log("💾 [localStorage] custom_variable.buy -> localStorage.buy");
     localStorage.setItem("buy" + custom_variable["id"], JSON.stringify(custom_variable.buy));
 }
 

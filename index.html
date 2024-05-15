@@ -11,22 +11,19 @@
 
 <body style="opacity:0;">
     <div w3-include-html="navbar.html"></div>
+
     <center>
-        <article>
-            <header>
-                <h1>
-                    <span id="product_name"></span>
-                </h1>
-            </header>
-            <span id="product_description""></span>
+        <article id="index">
+
         </article>
-        <div id="product"></div>
+        <div id="index_image"></div>
     </center>
+
     <div id="menu" class="menu_vertical">
         <div class="menu_item">
             <center>
                 <a href="buy.html" class="menu_item">
-                    <h2>Acheter</h2>
+                    <h2 class="i18n">Buy</h2>
                     <img src="static/svg/icons/buy.svg">
                 </a>
             </center>
@@ -34,7 +31,7 @@
         <div class="menu_item">
             <center>
                 <a href="make.html" class="menu_item">
-                    <h2>Fabriquer</h2>
+                    <h2 class="i18n">Build</h2>
                     <img src="static/svg/icons/soldering.svg">
                 </a>
             </center>
@@ -43,7 +40,7 @@
         <div class="menu_item">
             <center>
                 <a href="upload.html" class="menu_item">
-                    <h2>Programmer</h2>
+                    <h2 class="i18n">Upload</h2>
                     <img src="static/svg/icons/upload.svg">
                 </a>
             </center>
@@ -52,7 +49,7 @@
         <div class="menu_item">
             <center>
                 <a href="printing.html" class="menu_item">
-                    <h2>Boitier</h2>
+                    <h2 class="i18n">Print</h2>
                     <img src="static/svg/icons/printing.svg">
                 </a>
             </center>
@@ -60,9 +57,12 @@
         </div>
     </div>
 </body>
+
 <script type="text/javascript" src="static/js/default.js"></script>
+<script type="text/javascript" src="static/js/libs/marked/marked.min.js"></script>
 <script type="text/javascript" src="static/js/svg.js"></script>
-<script type="text/javascript" src="static/js/index.js"></script>
-<script type="text/javascript" src="custom/page/index.js"></script>
+
+<script type="text/javascript" src="static/js/page/index.js"></script>
+<script type="text/javascript" src="custom/page/index/index.js"></script>
 
 </html>
