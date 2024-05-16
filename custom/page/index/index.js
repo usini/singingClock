@@ -1,6 +1,6 @@
 audio_element = new Audio();
 audio_element.volume = 0.5;
-document.addEventListener("svgLoaded", () => {
+document.addEventListener("finishLoaded", () => {
     refreshTime();
 
     onNewMinute(() => {
