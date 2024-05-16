@@ -1,3 +1,4 @@
+//document.body.style.display = none;
 // Analyser l'URL pour obtenir les paramètres de requête
 const urlParams = new URLSearchParams(window.location.search);
 
@@ -24,9 +25,6 @@ console.log("🖲️ [JS] " + script_make_url);
 var script_make = document.createElement('script');
 script_make.src = script_make_url
 document.head.appendChild(script_make);
-
-includeMD("make" + make_page, "make");
-
 
 pageArgInt = parseInt(pageArg);
 //console.log(pageArgInt - 1)
@@ -94,4 +92,17 @@ document.addEventListener("keydown", function (event) {
     }
 });
 
-load_svg(make_image, "image");
+document.addEventListener("translateLoaded", function (event) {
+    includeMD("make" + make_page, "make")
+    .then(() => {
+      return load_svg(make_image, "image");
+    })
+    .then(() => {
+        const event = new Event("finishLoaded");
+        document.dispatchEvent(event);
+    })
+});
+
+
+
+

@@ -1,4 +1,4 @@
-document.addEventListener("svgLoaded", () => {
+document.addEventListener("finishLoaded", () => {
     flux1();
 });
 

@@ -1,4 +1,4 @@
-document.addEventListener("svgLoaded", () => {
+document.addEventListener("finishLoaded", () => {
     hot_air1();
     tweezers1();
 });

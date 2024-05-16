@@ -1,29 +1,11 @@
 console.log("~~~~~~ 📄 PAGE GENERATOR ~~~~~~~~~~~~");
 
-includeHTML();
-custom_variable = {};
 
-async function json_to_text(var_link, variable) {
-  try {
-    const response = await fetch(var_link);
-    if (!response.ok) {
-      throw new Error("Can't find " + var_link)
-    }
-    const jsonData = await response.json();
-    console.log("🗓️ [JSON] " + var_link + " -> custom_variable." + variable);
-    custom_variable[variable] = jsonData;
-    const event = new Event(variable + "Loaded");
-    document.dispatchEvent(event);
-  } catch (error) {
-    console.error('Fetch Error:', error);
-    return null;
-  }
-}
 
 // Load translation
-var script_i18n = document.createElement('script');
-script_i18n.src = "static/js/i18n.js"
-document.head.appendChild(script_i18n);
+//var script_i18n = document.createElement('script');
+//script_i18n.src = "static/js/i18n.js"
+//document.head.appendChild(script_i18n);
 json_to_text("custom/settings.json", "settings");
 
 
@@ -33,13 +15,16 @@ if (localStorage.getItem("data-theme") == null) {
   localStorage.setItem("data-theme", "dark")
 }
 
+
 document.addEventListener("langLoaded", () => {
-  document.getElementById("product_name_navbar").innerHTML = custom_variable["lang"].product_name;
-  document.title = custom_variable["lang"].product_name;
+  includeHTML();
 });
 
-document.addEventListener("settingsLoaded", () => {
+document.addEventListener("finishLoaded", () => {
+  document.title = custom_variable["lang"].product_name;
+  document.getElementById("product_name_navbar").innerHTML = custom_variable["lang"].product_name;
   document.getElementById("source_link").href = custom_variable["settings"].git_link;
+  document.body.style.opacity = 1;
 });
 
 function change_theme() {
@@ -65,7 +50,7 @@ function change_theme_icon() {
 function includeHTML() {
   var z, i, elmnt, file, xhttp;
   /* Loop through a collection of all HTML elements: */
-  z = document.getElementsByTagName("*");
+  z = document.getElementsByClassName("w3");
   for (i = 0; i < z.length; i++) {
     elmnt = z[i];
     /*search for elements with a certain atrribute:*/
@@ -82,6 +67,11 @@ function includeHTML() {
           console.log("📖 [HTML] " + file + ' ->  w3-include-html="'+file+'"');
           includeHTML();
           change_theme_icon();
+          //console.log("Loading HTML");
+          //console.log(i);
+          if(i==(z.length-1)){
+            translate_all(lang);
+          }
         }
       }
       xhttp.open("GET", file, true);
@@ -90,17 +80,33 @@ function includeHTML() {
       return;
     }
   }
+  //translate_all(lang);
 }
 
 function includeMD(url, id) {
-  if (navigator.language.includes("fr")) {
-    page = "custom/page/" + url + "/translation/"+id+".fr.md";
-  } else {
-    page = url +"/" + id+".md";
-  }
+  return new Promise((resolve, reject) => {
+    let page;
+    if (navigator.language.includes("fr")) {
+      page = "custom/page/" + url + "/translation/" + id + ".fr.md";
+    } else {
+      page = url + "/" + id + ".md";
+    }
 
-  fetch(page).then(response => response.text()).then(function (text) {
-    console.log('📖 [MD] ' + page + ' -> id="' + id + '"');
-    document.getElementById(id).innerHTML = marked.parse(text);
+    fetch(page)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.text();
+      })
+      .then(text => {
+        console.log('📖 [MD] ' + page + ' -> id="' + id + '"');
+        document.getElementById(id).innerHTML = marked.parse(text);
+        resolve();
+      })
+      .catch(error => {
+        console.error('Error loading markdown:', error);
+        reject(error);
+      });
   });
 }

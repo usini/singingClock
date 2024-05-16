@@ -1,5 +1,5 @@
 //Translator
-
+custom_variable = {};
 // Language Selector
 var script_lang = document.createElement('script');
 translation = false;
@@ -15,6 +15,23 @@ if (navigator.language.includes("fr")) {
     json_to_text("custom/text/en.json", "lang");
 }
 
+async function json_to_text(var_link, variable) {
+    try {
+        const response = await fetch(var_link);
+        if (!response.ok) {
+            throw new Error("Can't find " + var_link)
+        }
+        const jsonData = await response.json();
+        console.log("🗓️ [JSON] " + var_link + " -> custom_variable." + variable);
+        custom_variable[variable] = jsonData;
+        const event = new Event(variable + "Loaded");
+        document.dispatchEvent(event);
+    } catch (error) {
+        console.error('Fetch Error:', error);
+        return null;
+    }
+}
+
 function translate_all(lang) {
     if (translation) {
         for (const [key, value] of Object.entries(document.querySelectorAll(".i18n"))) {
@@ -25,5 +42,6 @@ function translate_all(lang) {
             }
         }
     }
-    document.body.style.opacity = 1;
+    const event = new Event("translateLoaded");
+    document.dispatchEvent(event);
 }

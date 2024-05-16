@@ -25,4 +25,3 @@ lang["Image"] = "Image"
 lang["Price"] = "Prix"
 lang["Link"] = "Lien"
 lang["Status"] = "Etat"
-translate_all(lang);

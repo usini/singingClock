@@ -112,3 +112,8 @@ function change_status(id){
 }
 
 update_link();
+
+document.addEventListener("translateLoaded", function (event) {
+    const event_loaded = new Event("finishLoaded");
+    document.dispatchEvent(event_loaded);
+});
