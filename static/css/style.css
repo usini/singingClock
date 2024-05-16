@@ -7,25 +7,11 @@
         font-size: 15px;
     }
 
-    article {
-        padding:0px;
-    }
-
-    #diagram {
-        margin-top: -40px;
+    #image {
+        transform: rotate(90deg);
     }
 
 }
-
-h1 {
-    margin-bottom: 0px;
-}
-
-article {
-    margin: 0px;
-}
-
-
 
 .menu_vertical {
     display: flex;
@@ -36,7 +22,6 @@ article {
 .menu_item {
     width: calc(25% - 10px);
     /* Répartit les éléments sur 4 colonnes avec un espace entre */
-    margin-bottom: 20px;
     transition: transform 0.2s;
     opacity: 0.8;
 }
